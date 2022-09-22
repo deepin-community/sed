@@ -1,0 +1,16 @@
+#! /usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	dh_auto_configure -- --exec-prefix=/ --with-packager=Debian --without-included-regex
+
+override_dh_auto_build:
+	dh_auto_build -- HELP2MAN=/usr/bin/help2man
+
+override_dh_shlibdeps:
+	dh_shlibdeps -- -dPre-Depends
+
+override_dh_auto_clean:
+	test ! -f Makefile || dh_auto_clean
