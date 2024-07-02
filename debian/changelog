@@ -1,3 +1,32 @@
+sed (4.9-2) unstable; urgency=medium
+
+  [ Gioele Barabucci ]
+  * Support <nodoc> build profile.  closes: #1051792.
+
+  [ Clint Adams ]
+  * Patch from Helmut Grohne to move sed to /usr/bin.  closes: #1059821.
+
+ -- Clint Adams <clint@debian.org>  Mon, 01 Jan 2024 18:37:14 -0500
+
+sed (4.9-1) unstable; urgency=medium
+
+  * New upstream version.
+  * Switch to bundled help2man for man page generation.
+
+ -- Clint Adams <clint@debian.org>  Thu, 05 Jan 2023 14:55:25 -0500
+
+sed (4.8-1.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * d/copyright: Complete and convert to format 1.0. closes: #1019288.
+
+  [ Clint Adams ]
+  * Switch debhelper compat level to 13.
+  * Bump Standards-Version to 4.6.0.
+  * Set Rules-Requires-Root to no.
+
+ -- Bastian Germann <bage@debian.org>  Wed, 21 Dec 2022 13:44:30 +0100
+
 sed (4.8-1) unstable; urgency=medium
 
   * New upstream version.

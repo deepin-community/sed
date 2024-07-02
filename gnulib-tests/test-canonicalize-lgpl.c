@@ -1,9 +1,9 @@
 /* Test of execution of file name canonicalization.
-   Copyright (C) 2007-2020 Free Software Foundation, Inc.
+   Copyright (C) 2007-2022 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
+   the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -39,7 +39,10 @@ SIGNATURE_CHECK (canonicalize_file_name, char *, (const char *));
 #include "same-inode.h"
 #include "ignore-value.h"
 
-#include "null-ptr.h"
+#if GNULIB_defined_canonicalize_file_name
+# include "null-ptr.h"
+#endif
+
 #include "macros.h"
 
 #define BASE "t-can-lgpl.tmp"
@@ -62,6 +65,48 @@ main (void)
     fd = creat (BASE "/tra", 0600);
     ASSERT (0 <= fd);
     ASSERT (close (fd) == 0);
+  }
+
+  /* Check // handling (the easy cases, without symlinks).
+     This // handling is not mandated by POSIX.  However, many applications
+     expect that canonicalize_file_name "canonicalizes" the file name,
+     that is, that different results of canonicalize_file_name correspond
+     to different files (except for hard links).  */
+  {
+    char *result0 = canonicalize_file_name ("/etc/passwd");
+    if (result0 != NULL) /* This file does not exist on native Windows.  */
+      {
+        char *result;
+
+        result = canonicalize_file_name ("/etc//passwd");
+        ASSERT (result != NULL && strcmp (result, result0) == 0);
+
+        result = canonicalize_file_name ("/etc///passwd");
+        ASSERT (result != NULL && strcmp (result, result0) == 0);
+
+        /* On Windows, the syntax //host/share/filename denotes a file
+           in a directory named 'share', exported from host 'host'.
+           See also m4/double-slash-root.m4.  */
+#if !(defined _WIN32 || defined __CYGWIN__)
+        result = canonicalize_file_name ("//etc/passwd");
+        ASSERT (result != NULL && strcmp (result, result0) == 0);
+
+        result = canonicalize_file_name ("//etc//passwd");
+        ASSERT (result != NULL && strcmp (result, result0) == 0);
+
+        result = canonicalize_file_name ("//etc///passwd");
+        ASSERT (result != NULL && strcmp (result, result0) == 0);
+#endif
+
+        result = canonicalize_file_name ("///etc/passwd");
+        ASSERT (result != NULL && strcmp (result, result0) == 0);
+
+        result = canonicalize_file_name ("///etc//passwd");
+        ASSERT (result != NULL && strcmp (result, result0) == 0);
+
+        result = canonicalize_file_name ("///etc///passwd");
+        ASSERT (result != NULL && strcmp (result, result0) == 0);
+      }
   }
 
   /* Check for ., .., intermediate // handling, and for error cases.  */
@@ -163,13 +208,29 @@ main (void)
     ASSERT (errno == ENOENT);
   }
 
-  /* Check that a non-directory symlink with trailing slash yields NULL.  */
+  /* Check that a non-directory symlink with trailing slash yields NULL,
+     and likewise for other troublesome suffixes.  */
   {
-    char *result;
-    errno = 0;
-    result = canonicalize_file_name (BASE "/huk/");
-    ASSERT (result == NULL);
-    ASSERT (errno == ENOTDIR);
+    char const *const file_name[]
+      = {
+         BASE "/huk/",
+         BASE "/huk/.",
+         BASE "/huk/./",
+         BASE "/huk/./.",
+         BASE "/huk/x",
+         BASE "/huk/..",
+         BASE "/huk/../",
+         BASE "/huk/../.",
+         BASE "/huk/../x",
+         BASE "/huk/./..",
+         BASE "/huk/././../x",
+        };
+    for (int i = 0; i < sizeof file_name / sizeof *file_name; i++)
+      {
+        errno = 0;
+        ASSERT (!canonicalize_file_name (file_name[i]));
+        ASSERT (errno == ENOTDIR);
+      }
   }
 
   /* Check that a missing directory via symlink yields NULL.  */
@@ -190,7 +251,7 @@ main (void)
     ASSERT (errno == ELOOP);
   }
 
-  /* Check that leading // is honored correctly.  */
+  /* Check that leading // within symlinks is honored correctly.  */
   {
     struct stat st1;
     struct stat st2;
