@@ -1,3 +1,9 @@
+sed (4.9-2+deb13u1deepin1) unstable; urgency=medium
+
+  * 0001-feat-add-sw64-support.patch
+
+ -- Tianyu Chen <sweetyfish@deepin.org>  Thu, 14 May 2026 18:19:42 +0800
+
 sed (4.9-2+deb13u1) trixie; urgency=medium
 
   * Non-maintainer upload.
