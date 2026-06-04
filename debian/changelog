@@ -1,3 +1,10 @@
+sed (4.9-2deepin2) unstable; urgency=medium
+
+  * Fix CVE-2026-5958: TOCTOU race in sed -i --follow-symlinks
+    (upstream commit 6b9b43c55ccd3beadbc0094b983c82bdb389f33b)
+
+ -- deepin-ci-robot <packages@deepin.org>  Thu, 04 Jun 2026 09:00:00 +0800
+
 sed (4.9-2deepin1) unstable; urgency=medium
 
   * feat: add sw64 support.
