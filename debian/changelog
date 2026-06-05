@@ -1,15 +1,16 @@
-sed (4.9-2deepin2) unstable; urgency=medium
+sed (4.9-2+deb13u1deepin1) unstable; urgency=medium
 
-  * Fix CVE-2026-5958: TOCTOU race in sed -i --follow-symlinks
-    (upstream commit 6b9b43c55ccd3beadbc0094b983c82bdb389f33b)
+  * 0001-feat-add-sw64-support.patch
 
- -- deepin-ci-robot <packages@deepin.org>  Thu, 04 Jun 2026 09:00:00 +0800
+ -- Tianyu Chen <sweetyfish@deepin.org>  Thu, 14 May 2026 18:19:42 +0800
 
-sed (4.9-2deepin1) unstable; urgency=medium
+sed (4.9-2+deb13u1) trixie; urgency=medium
 
-  * feat: add sw64 support.
+  * Non-maintainer upload.
+  * sed: -i --follow-symlinks: fix TOCTOU race (CVE-2026-5958)
+    (Closes: #1134495)
 
- -- hudeng <hudeng@deepin.org>  Wed, 04 Jun 2025 17:36:18 +0800
+ -- Salvatore Bonaccorso <carnil@debian.org>  Tue, 21 Apr 2026 09:47:45 +0200
 
 sed (4.9-2) unstable; urgency=medium
 

@@ -1,2 +1,2 @@
+sed-i-follow-symlinks-fix-TOCTOU-race-CVE-2026-5958.patch
 0001-feat-add-sw64-support.patch
-CVE-2026-5958.patch
